@@ -7,8 +7,8 @@ public class CustomRigidbody : MonoBehaviour
     public float mass;
     private float inverseMass;
 
-    private Matrix4x4 localInverseInertiaTensor;
-    private Matrix4x4 globalInverseInertiaTensor;
+    private Matrix3x3 localInverseInertiaTensor;
+    private Matrix3x3 globalInverseInertiaTensor;
 
     [HideInInspector]
     public Vector3 globalCentroid;
@@ -18,7 +18,7 @@ public class CustomRigidbody : MonoBehaviour
     [ReadOnly]
     public Vector3 position;
     [HideInInspector]
-    public Matrix4x4 orientation;
+    public Matrix3x3 orientation;
 
     [HideInInspector]
     public Vector3 linearVelocity;
@@ -34,12 +34,12 @@ public class CustomRigidbody : MonoBehaviour
 
     private void UpdateGlobalCentroidFromPosition()
     {
-        globalCentroid = position + (Vector3)(orientation * localCentroid);
+        globalCentroid = position + orientation.Transform(localCentroid);
     }
 
     private void UpdatePositionFromGlobalCentroid()
     {
-        position = globalCentroid - (Vector3)(orientation * localCentroid);
+        position = globalCentroid - orientation.Transform(localCentroid);
     }
 
     private void AddColliders()
@@ -47,7 +47,7 @@ public class CustomRigidbody : MonoBehaviour
         /*參數歸零*/
         mass = 0;
         localCentroid = Vector3.zero;
-        localInverseInertiaTensor = Matrix4x4.zero;
+        localInverseInertiaTensor = Matrix3x3.zero;
 
         /*清除原本的碰撞器紀錄，並更新新的碰撞器*/
         colliders.Clear();
@@ -64,12 +64,38 @@ public class CustomRigidbody : MonoBehaviour
         inverseMass = 1 / mass;
         localCentroid *= inverseMass;
 
-        Matrix4x4 localInertiaTensor = Matrix4x4.zero;
+        Matrix3x3 localInertiaTensor = Matrix3x3.zero;
 
+        /*更新旋轉慣量矩陣*/
         foreach (CustomCollider cc in ccs)
         {
             Vector3 distance = localCentroid - cc.localCentroid;
+            localInertiaTensor += (cc.localInertiaTensor + 
+                                   cc.mass * (Vector3.Dot(distance,distance) * Matrix3x3.identity - 
+                                   Matrix3x3.OuterProduct(distance, distance)));
         }
+
+        localInverseInertiaTensor = localInertiaTensor.inverse;
+    }
+
+    public Vector3 LocalToGlobal(Vector3 point)
+    {
+        return orientation.Transform(point) + position;
+    }
+
+    public Vector3 GlobalToLocal(Vector3 point)
+    {
+        return orientation.inverse.Transform(point - position);
+    }
+
+    public Vector3 LocalToGlobalVec(Vector3 vector)
+    {
+        return orientation.Transform(vector);
+    }
+
+    public Vector3 GlobalToLocalVec(Vector3 vector)
+    {
+        return orientation.inverse.Transform(vector);
     }
 
     private void Reset()

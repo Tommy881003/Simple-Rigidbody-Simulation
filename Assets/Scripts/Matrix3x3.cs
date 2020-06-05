@@ -104,51 +104,61 @@ public struct Matrix3x3
         }
     }
 
-    public static Matrix3x3 Add(Matrix3x3 a, Matrix3x3 b)
+    public void SetRow(int index, Vector3 row)
     {
-        return new Matrix3x3
+        switch (index)
         {
-            m00 = a.m00 + b.m00,
-            m01 = a.m01 + b.m01,
-            m02 = a.m02 + b.m02,
-            m10 = a.m10 + b.m10,
-            m11 = a.m11 + b.m11,
-            m12 = a.m12 + b.m12,
-            m20 = a.m20 + b.m20,
-            m21 = a.m21 + b.m21,
-            m22 = a.m22 + b.m22,
-        };
+            case 0:
+                m00 = row.x;
+                m01 = row.y;
+                m02 = row.z;
+                return;
+            case 1:
+                m10 = row.x;
+                m11 = row.y;
+                m12 = row.z;
+                return;
+            case 2:
+                m20 = row.x;
+                m21 = row.y;
+                m22 = row.z;
+                return;
+            default:
+                return;
+        }
     }
 
-    public static Matrix3x3 Multiply(Matrix3x3 a, Matrix3x3 b)
+    public void SetColumn(int index, Vector3 column)
     {
-        return new Matrix3x3
+        switch (index)
         {
-            m00 = (a.m00 * b.m00) + (a.m01 * b.m10) + (a.m02 * b.m20),
-            m01 = (a.m00 * b.m01) + (a.m01 * b.m11) + (a.m02 * b.m21),
-            m02 = (a.m00 * b.m02) + (a.m01 * b.m12) + (a.m02 * b.m22),
-            m10 = (a.m10 * b.m00) + (a.m11 * b.m10) + (a.m12 * b.m20),
-            m11 = (a.m10 * b.m01) + (a.m11 * b.m11) + (a.m12 * b.m21),
-            m12 = (a.m10 * b.m02) + (a.m11 * b.m12) + (a.m12 * b.m22),
-            m20 = (a.m20 * b.m00) + (a.m21 * b.m10) + (a.m22 * b.m20),
-            m21 = (a.m20 * b.m01) + (a.m21 * b.m11) + (a.m22 * b.m21),
-            m22 = (a.m20 * b.m02) + (a.m21 * b.m12) + (a.m22 * b.m22),
-        };
+            case 0:
+                m00 = column.x;
+                m10 = column.y;
+                m20 = column.z;
+                return;
+            case 1:
+                m01 = column.x;
+                m11 = column.y;
+                m21 = column.z;
+                return;
+            case 2:
+                m02 = column.x;
+                m12 = column.y;
+                m22 = column.z;
+                return;
+            default:
+                return;
+        }
     }
 
-    public static Matrix3x3 Multiply(Matrix3x3 a, float b)
+    public Vector3 Transform(Vector3 vector)
     {
-        return new Matrix3x3
+        return new Vector3
         {
-            m00 = a.m00 * b,
-            m01 = a.m01 * b,
-            m02 = a.m02 * b,
-            m10 = a.m10 * b,
-            m11 = a.m11 * b,
-            m12 = a.m12 * b,
-            m20 = a.m20 * b,
-            m21 = a.m21 * b,
-            m22 = a.m22 * b,
+            x = m00 * vector.x + m01 * vector.y + m02 * vector.z,
+            y = m10 * vector.x + m11 * vector.y + m12 * vector.z,
+            z = m20 * vector.x + m21 * vector.y + m22 * vector.z
         };
     }
 
@@ -190,5 +200,158 @@ public struct Matrix3x3
             };
             return identity;
         }
+    }
+
+    public static Matrix3x3 OuterProduct(Vector3 a, Vector3 b)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.x * b.x,
+            m01 = a.x * b.y,
+            m02 = a.x * b.z,
+            m10 = a.y * b.x,
+            m11 = a.y * b.y,
+            m12 = a.y * b.z,
+            m20 = a.z * b.x,
+            m21 = a.z * b.y,
+            m22 = a.z * b.z
+        };
+    }
+
+    public static Matrix3x3 Rotate(Quaternion q)
+    {
+        return Convert4x4To3x3(Matrix4x4.Rotate(q));
+    }
+
+    public static Matrix3x3 Convert4x4To3x3(Matrix4x4 mat)
+    {
+        return new Matrix3x3
+        {
+            m00 = mat.m00,
+            m01 = mat.m01,
+            m02 = mat.m02,
+            m10 = mat.m10,
+            m11 = mat.m11,
+            m12 = mat.m12,
+            m20 = mat.m20,
+            m21 = mat.m21,
+            m22 = mat.m22
+        };
+    }
+
+    public static Matrix3x3 operator +(Matrix3x3 a, Matrix3x3 b)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.m00 + b.m00,
+            m01 = a.m01 + b.m01,
+            m02 = a.m02 + b.m02,
+            m10 = a.m10 + b.m10,
+            m11 = a.m11 + b.m11,
+            m12 = a.m12 + b.m12,
+            m20 = a.m20 + b.m20,
+            m21 = a.m21 + b.m21,
+            m22 = a.m22 + b.m22,
+        };
+    }
+
+    public static Matrix3x3 operator -(Matrix3x3 a, Matrix3x3 b)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.m00 - b.m00,
+            m01 = a.m01 - b.m01,
+            m02 = a.m02 - b.m02,
+            m10 = a.m10 - b.m10,
+            m11 = a.m11 - b.m11,
+            m12 = a.m12 - b.m12,
+            m20 = a.m20 - b.m20,
+            m21 = a.m21 - b.m21,
+            m22 = a.m22 - b.m22,
+        };
+    }
+
+    public static Matrix3x3 operator *(Matrix3x3 a, Matrix3x3 b)
+    {
+        return new Matrix3x3
+        {
+            m00 = (a.m00 * b.m00) + (a.m01 * b.m10) + (a.m02 * b.m20),
+            m01 = (a.m00 * b.m01) + (a.m01 * b.m11) + (a.m02 * b.m21),
+            m02 = (a.m00 * b.m02) + (a.m01 * b.m12) + (a.m02 * b.m22),
+            m10 = (a.m10 * b.m00) + (a.m11 * b.m10) + (a.m12 * b.m20),
+            m11 = (a.m10 * b.m01) + (a.m11 * b.m11) + (a.m12 * b.m21),
+            m12 = (a.m10 * b.m02) + (a.m11 * b.m12) + (a.m12 * b.m22),
+            m20 = (a.m20 * b.m00) + (a.m21 * b.m10) + (a.m22 * b.m20),
+            m21 = (a.m20 * b.m01) + (a.m21 * b.m11) + (a.m22 * b.m21),
+            m22 = (a.m20 * b.m02) + (a.m21 * b.m12) + (a.m22 * b.m22),
+        };
+    }
+
+    public static Matrix3x3 operator *(Matrix3x3 a, float scalar)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.m00 * scalar,
+            m01 = a.m01 * scalar,
+            m02 = a.m02 * scalar,
+            m10 = a.m10 * scalar,
+            m11 = a.m11 * scalar,
+            m12 = a.m12 * scalar,
+            m20 = a.m20 * scalar,
+            m21 = a.m21 * scalar,
+            m22 = a.m22 * scalar,
+        };
+    }
+
+    public static Matrix3x3 operator *(float scalar, Matrix3x3 a)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.m00 * scalar,
+            m01 = a.m01 * scalar,
+            m02 = a.m02 * scalar,
+            m10 = a.m10 * scalar,
+            m11 = a.m11 * scalar,
+            m12 = a.m12 * scalar,
+            m20 = a.m20 * scalar,
+            m21 = a.m21 * scalar,
+            m22 = a.m22 * scalar
+        };
+    }
+
+    public static Matrix3x3 operator /(Matrix3x3 a, float scalar)
+    {
+        return new Matrix3x3
+        {
+            m00 = a.m00 / scalar,
+            m01 = a.m01 / scalar,
+            m02 = a.m02 / scalar,
+            m10 = a.m10 / scalar,
+            m11 = a.m11 / scalar,
+            m12 = a.m12 / scalar,
+            m20 = a.m20 / scalar,
+            m21 = a.m21 / scalar,
+            m22 = a.m22 / scalar,
+        };
+    }
+
+    public static bool operator ==(Matrix3x3 a, Matrix3x3 b)
+    {
+        if (a.m00 == b.m00 && a.m01 == b.m01 && a.m02 == b.m02 &&
+            a.m10 == b.m10 && a.m11 == b.m11 && a.m12 == b.m12 &&
+            a.m20 == b.m20 && a.m21 == b.m21 && a.m22 == b.m22)
+            return true;
+        else
+            return false;
+    }
+
+    public static bool operator !=(Matrix3x3 a, Matrix3x3 b)
+    {
+        if (a.m00 != b.m00 || a.m01 != b.m01 || a.m02 != b.m02 ||
+            a.m10 != b.m10 || a.m11 != b.m11 || a.m12 != b.m12 ||
+            a.m20 != b.m20 || a.m21 != b.m21 || a.m22 != b.m22)
+            return true;
+        else
+            return false;
     }
 }

@@ -9,7 +9,7 @@ public class CustomCollider : MonoBehaviour
     public Vector3 position;
     [HideInInspector]
     public Vector3 localCentroid;
-    public Matrix4x4 localInertiaTensor;
+    public Matrix3x3 localInertiaTensor;
 
     protected virtual void Reset() { }
 }
