@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomRigidbody : MonoBehaviour
 {
-    public float mass;
+    private float mass;
     private float inverseMass;
 
     private Matrix3x3 localInverseInertiaTensor;
@@ -32,16 +32,19 @@ public class CustomRigidbody : MonoBehaviour
 
     private List<CustomCollider> colliders;
 
+    /*根據質心更新位置*/
     private void UpdateGlobalCentroidFromPosition()
     {
         globalCentroid = position + orientation.Transform(localCentroid);
     }
 
+    /*根據位置更新質心*/
     private void UpdatePositionFromGlobalCentroid()
     {
         position = globalCentroid - orientation.Transform(localCentroid);
     }
 
+    /*更新碰撞器以及剛體的物理參數*/
     private void AddColliders()
     {
         /*參數歸零*/
@@ -78,27 +81,46 @@ public class CustomRigidbody : MonoBehaviour
         localInverseInertiaTensor = localInertiaTensor.inverse;
     }
 
+    /*點轉換(物體坐標系到世界座標系)*/
     public Vector3 LocalToGlobal(Vector3 point)
     {
         return orientation.Transform(point) + position;
     }
 
+    /*點轉換(世界坐標系到物體座標系)*/
     public Vector3 GlobalToLocal(Vector3 point)
     {
         return orientation.inverse.Transform(point - position);
     }
 
+    /*向量轉換(物體坐標系到世界座標系)*/
     public Vector3 LocalToGlobalVec(Vector3 vector)
     {
         return orientation.Transform(vector);
     }
 
+    /*向量轉換(世界坐標系到物體座標系)*/
     public Vector3 GlobalToLocalVec(Vector3 vector)
     {
         return orientation.inverse.Transform(vector);
     }
 
+    /*施力*/
+    public void AddForce(Vector3 force, Vector3 at)
+    {
+        forceAccumulator += force;
+        torqueAccumulator += Vector3.Cross((at - globalCentroid), force);
+    }
+
+    /*修正因為更新旋轉矩陣造成的浮點數誤差*/
+    public void RecalculateOrientation()
+    {
+        Quaternion q = orientation.toAffine4x4.rotation;
+        orientation = Matrix3x3.Rotate(q.normalized);
+    }
+
     private void Reset()
     {
+        AddColliders();
     }
 }
