@@ -8,13 +8,13 @@ public struct CollisionPair
     public CustomCollider b;
 }
 
-public abstract class Broadphase : MonoBehaviour
+public abstract class Broadphase
 {
     /*增加一個新的AABB*/
     public abstract void Add(Bounds aabb);
 
     /*更新AABB之間的碰撞關係*/
-    public abstract void FixedUpdate();
+    public abstract void UpdateAABB();
 
     /*算出所有可能的碰撞序對*/
     public abstract List<CollisionPair> ComputePossibleCollisions();

@@ -30,7 +30,7 @@ public class CustomRigidbody : MonoBehaviour
     [HideInInspector]
     public Vector3 torqueAccumulator;
 
-    private List<CustomCollider> colliders;
+    private List<CustomCollider> colliders = new List<CustomCollider>();
 
     /*根據質心更新位置*/
     private void UpdateGlobalCentroidFromPosition()
