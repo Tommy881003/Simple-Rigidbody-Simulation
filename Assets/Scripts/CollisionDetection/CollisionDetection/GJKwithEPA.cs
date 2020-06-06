@@ -26,15 +26,11 @@ public class GJKwithEPA : CollisionDetection
         List<CollisionContact> contacts = new List<CollisionContact>();
         foreach(CollisionPair pair in pairs)
         {
-            Debug.Log(pair.a.name + pair.b.name);
             currentContact = new CollisionContact();
             currentContact.a = pair.a;
             currentContact.b = pair.b;
             if (GJK(pair.a, pair.b))
-            {
                 contacts.Add(currentContact);
-                Debug.Log("Contact");
-            } 
         }
         return contacts;
     }
@@ -62,7 +58,7 @@ public class GJKwithEPA : CollisionDetection
         }
         simplexCount = 2;
 
-        for(int i = 0; i < 32; i++)
+        for(int i = 0; i < 64; i++)
         {
             first = Support(colliderB, searchDir) - Support(colliderA, -searchDir);
             if (Vector3.Dot(first, searchDir) < 0)
@@ -84,6 +80,16 @@ public class GJKwithEPA : CollisionDetection
         Vector3 nFirst = -first;
         Vector3 normal = Vector3.Cross(sVect, tVect);
 
+        if((first + normal).sqrMagnitude < normal.sqrMagnitude)
+        {
+            normal = -normal;
+            Vector3 temp = second;
+            second = third;
+            third = temp;
+            sVect = second - first;
+            tVect = third - first;
+        }
+
         /*Try reducing the simplex such that it contains the closest point with the lowest dimension.*/
         if(Vector3.Dot(Vector3.Cross(sVect, normal),nFirst) > 0)
         {
@@ -93,7 +99,7 @@ public class GJKwithEPA : CollisionDetection
             searchDir = Vector3.Cross(Vector3.Cross(sVect, nFirst), sVect);
             return;
         }
-        else if(Vector3.Dot(Vector3.Cross(tVect, normal), nFirst) > 0)
+        else if(Vector3.Dot(Vector3.Cross(normal, tVect), nFirst) > 0)
         {
             /*The closest point is on edge (first,third).*/
             second = first;
@@ -169,13 +175,14 @@ public class GJKwithEPA : CollisionDetection
         Matrix4x4 worldMatrix = collider.gameObject.transform.localToWorldMatrix;
 
         Vector3[] verts = collider.mesh.vertices;
+
         foreach (Vector3 v in verts)
         {
-            Vector3 globalV = worldMatrix * v;
-            if (Vector3.Dot(vector, v) > dotValue)
+            Vector3 globalV = worldMatrix.MultiplyPoint3x4(v);
+            if (Vector3.Dot(vector, globalV) > dotValue)
             {
-                dotValue = Vector3.Dot(vector, v);
-                support = v;
+                dotValue = Vector3.Dot(vector, globalV);
+                support = globalV;
             }
         }
         return support;
