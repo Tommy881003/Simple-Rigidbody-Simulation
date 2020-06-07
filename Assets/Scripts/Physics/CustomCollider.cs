@@ -24,15 +24,9 @@ public class CustomCollider : MonoBehaviour
     [HideInInspector]
     public colliderType type = colliderType.Other;
 
-    /*Just for testing collision detection*/
-    private MeshRenderer mr;
-    [HideInInspector]
-    public bool haveContact = false;
-
     protected virtual void Reset() 
     {
         mesh = GetComponent<MeshFilter>().sharedMesh;
-        mr = GetComponent<MeshRenderer>();
 
         int[] tris = mesh.triangles;
         Vector3[] verts = mesh.vertices;
@@ -63,9 +57,18 @@ public class CustomCollider : MonoBehaviour
         Reset();
     }
 
-    private void FixedUpdate()
+    public void CollisionSolver(Vector3 LocalContactPoint, Vector3 normal, float depth)
     {
-        mr.material.color = haveContact ? Color.red : Color.white;
-        haveContact = false;
+        Vector3 contactPoint = transform.localToWorldMatrix.MultiplyPoint3x4(LocalContactPoint);
+        if (Vector3.Dot(LocalContactPoint, normal) > 0)
+        {
+            Debug.DrawLine(contactPoint, contactPoint - normal.normalized * depth);
+            transform.position -= normal.normalized * depth/2;
+        }
+        else
+        {
+            Debug.DrawLine(contactPoint, contactPoint + normal.normalized * depth);
+            transform.position += normal.normalized * depth/2;
+        }    
     }
 }

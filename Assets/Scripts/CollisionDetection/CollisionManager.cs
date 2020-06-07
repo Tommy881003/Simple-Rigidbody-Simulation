@@ -64,8 +64,8 @@ public class CollisionManager : MonoBehaviour
         contacts = collisionDetection.CalculateCollision(pairs);
         foreach(CollisionContact contact in contacts)
         {
-            contact.a.haveContact = true;
-            contact.b.haveContact = true;
+            contact.a.CollisionSolver(contact.localContactA, contact.contactNormal, contact.penetrationDepth);
+            contact.b.CollisionSolver(contact.localContactB, contact.contactNormal, contact.penetrationDepth);
         }
     }
 }
