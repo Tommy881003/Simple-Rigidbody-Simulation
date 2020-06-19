@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class CustomRigidbody : MonoBehaviour
 {
-    private float mass;
-    private float inverseMass;
+    /*Constant 是計算position & rotation時的倍率*/
+    public float veloConstant;
+    public float angularConstant;
+    /*************************/
 
-    private Matrix3x3 localInverseInertiaTensor;
-    private Matrix3x3 globalInverseInertiaTensor;
+    public float mass;
+    [HideInInspector]
+    public float inverseMass;
+
+    [HideInInspector]
+    public Matrix3x3 localInverseInertiaTensor;
+    [HideInInspector]
+    public Matrix3x3 globalInverseInertiaTensor;
 
     [HideInInspector]
     public Vector3 globalCentroid;
@@ -20,9 +28,9 @@ public class CustomRigidbody : MonoBehaviour
     [HideInInspector]
     public Matrix3x3 orientation;
 
-    [HideInInspector]
+    //[HideInInspector]
     public Vector3 linearVelocity;
-    [HideInInspector]
+    //[HideInInspector]
     public Vector3 angularVelocity;
 
     [HideInInspector]
@@ -59,6 +67,7 @@ public class CustomRigidbody : MonoBehaviour
         /*更新質量和質量中心*/
         foreach(CustomCollider cc in ccs)
         {
+            cc._rigidbody = this;
             colliders.Add(cc);
             mass += cc.mass;
             localCentroid += cc.mass * cc.localCentroid;
@@ -119,7 +128,18 @@ public class CustomRigidbody : MonoBehaviour
         orientation = Matrix3x3.Rotate(q.normalized);
     }
 
+    private void FixedUpdate()
+    {
+        transform.position += linearVelocity * veloConstant * Time.fixedDeltaTime;
+        transform.Rotate(angularVelocity * angularConstant * Time.fixedDeltaTime);
+    }
+
     private void Reset()
+    {
+        AddColliders();
+    }
+
+    private void Awake()
     {
         AddColliders();
     }

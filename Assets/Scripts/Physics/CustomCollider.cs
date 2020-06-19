@@ -20,6 +20,8 @@ public class CustomCollider : MonoBehaviour
     [HideInInspector]
     public Mesh mesh;
     [HideInInspector]
+    public CustomRigidbody _rigidbody = null;
+    [HideInInspector]
     public List<Vector3> localNormals = new List<Vector3>();
     [HideInInspector]
     public colliderType type = colliderType.Other;
@@ -46,17 +48,17 @@ public class CustomCollider : MonoBehaviour
             if(!localNormals.Contains(normal) && !localNormals.Contains(-normal))
             {
                 localNormals.Add(normal);
-                Debug.DrawLine(center, center + normal * 0.2f, Color.yellow, 3);
+                //Debug.DrawLine(center, center + normal * 0.2f, Color.yellow, 3);
             }
         }
     }
 
     private void Start()
     {
-        CollisionManager.colliders.Add(this);
         Reset();
+        CollisionManager.colliders.Add(this);
     }
-
+    /*
     public void CollisionSolver(Vector3 LocalContactPoint, Vector3 normal, float depth)
     {
         Vector3 contactPoint = transform.localToWorldMatrix.MultiplyPoint3x4(LocalContactPoint);
@@ -71,4 +73,5 @@ public class CustomCollider : MonoBehaviour
             transform.position += normal.normalized * depth/2;
         }    
     }
+    */
 }
