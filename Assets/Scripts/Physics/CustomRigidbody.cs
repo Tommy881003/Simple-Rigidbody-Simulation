@@ -89,7 +89,7 @@ public class CustomRigidbody : MonoBehaviour
         {
             Vector3 distance = localCentroid - cc.localCentroid;
             localInertiaTensor += (cc.localInertiaTensor + 
-                                   cc.mass * (Vector3.Dot(distance,distance) * Matrix3x3.identity - 
+                                   cc.mass * (Vector3.Dot(distance, distance) * Matrix3x3.identity - 
                                    Matrix3x3.OuterProduct(distance, distance)));
         }
 

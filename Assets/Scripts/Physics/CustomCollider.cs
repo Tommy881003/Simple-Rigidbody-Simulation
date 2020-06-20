@@ -12,7 +12,7 @@ public enum colliderType
 [RequireComponent(typeof(MeshFilter))]
 public class CustomCollider : MonoBehaviour
 {
-    public float mass;
+    public float mass = 1;
     [HideInInspector]
     public Vector3 localCentroid = Vector3.zero;
     [HideInInspector]
@@ -26,7 +26,7 @@ public class CustomCollider : MonoBehaviour
     [HideInInspector]
     public colliderType type = colliderType.Other;
 
-    protected virtual void Reset() 
+    protected virtual void Calculate() 
     {
         mesh = GetComponent<MeshFilter>().sharedMesh;
 
@@ -55,7 +55,10 @@ public class CustomCollider : MonoBehaviour
 
     private void Start()
     {
-        Reset();
+        Calculate();
         CollisionManager.colliders.Add(this);
+        Debug.Log(localInertiaTensor.GetRow(0));
+        Debug.Log(localInertiaTensor.GetRow(1));
+        Debug.Log(localInertiaTensor.GetRow(2));
     }
 }

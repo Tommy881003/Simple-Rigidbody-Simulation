@@ -85,7 +85,7 @@ public struct Matrix3x3
             case 2:
                 return new Vector3(m20, m21, m22);
             default:
-                return Vector3.zero;
+                return new Vector3(1, 1, 1);
         }
     }
 
