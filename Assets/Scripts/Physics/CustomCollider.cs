@@ -58,20 +58,4 @@ public class CustomCollider : MonoBehaviour
         Reset();
         CollisionManager.colliders.Add(this);
     }
-    /*
-    public void CollisionSolver(Vector3 LocalContactPoint, Vector3 normal, float depth)
-    {
-        Vector3 contactPoint = transform.localToWorldMatrix.MultiplyPoint3x4(LocalContactPoint);
-        if (Vector3.Dot(LocalContactPoint, normal) > 0)
-        {
-            Debug.DrawLine(contactPoint, contactPoint - normal.normalized * depth);
-            transform.position -= normal.normalized * depth/2;
-        }
-        else
-        {
-            Debug.DrawLine(contactPoint, contactPoint + normal.normalized * depth);
-            transform.position += normal.normalized * depth/2;
-        }    
-    }
-    */
 }

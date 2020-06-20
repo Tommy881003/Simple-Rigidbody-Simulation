@@ -39,9 +39,14 @@ public class GJKwithEPA : CollisionDetection
         List<CollisionContact> contacts = new List<CollisionContact>();
         foreach(CollisionPair pair in pairs)
         {
+            if (pair.a._rigidbody == null || pair.b._rigidbody == null ||
+                pair.a._rigidbody == pair.b._rigidbody)
+                continue;
+
             currentContact = new CollisionContact();
             currentContact.a = pair.a;
             currentContact.b = pair.b;
+
             if (GJK(pair.a, pair.b))
             {
                 EPA(pair.a, pair.b);

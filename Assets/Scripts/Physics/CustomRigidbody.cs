@@ -5,10 +5,11 @@ using UnityEngine;
 public class CustomRigidbody : MonoBehaviour
 {
     /*Constant 是計算position & rotation時的倍率*/
-    public float veloConstant;
-    public float angularConstant;
+    private static readonly float veloConstant = 1;
+    private static readonly float angularConstant = 1;
     /*************************/
 
+    [ReadOnly]
     public float mass;
     [HideInInspector]
     public float inverseMass;
@@ -28,10 +29,15 @@ public class CustomRigidbody : MonoBehaviour
     [HideInInspector]
     public Matrix3x3 orientation;
 
-    //[HideInInspector]
+    //[ReadOnly]
     public Vector3 linearVelocity;
-    //[HideInInspector]
+    //[ReadOnly]
     public Vector3 angularVelocity;
+
+    [Range(0f, 1f)]
+    public float friction = 0.5f;
+    [Range(0f, 1f)]
+    public float resistution = 0.5f;
 
     [HideInInspector]
     public Vector3 forceAccumulator;

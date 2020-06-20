@@ -152,6 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bType: 0
   cType: 0
+  beta: 0
 --- !u!4 &48321271
 Transform:
   m_ObjectHideFlags: 0
@@ -185,7 +186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &127354221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,8 +199,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -207,6 +206,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &127354222
@@ -310,7 +311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &274053749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,15 +324,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
   localCentroid: {x: NaN, y: NaN, z: NaN}
   position: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 5, y: 0, z: 0}
-  angularVelocity: {x: 0, y: 0, z: 0}
+  linearVelocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 30, y: 30, z: 30}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &274053750
@@ -1175,7 +1176,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274053748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 5, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1200,7 +1201,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &349366270
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1213,8 +1214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -1222,6 +1221,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &349366271
@@ -1417,7 +1418,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &789121404
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1430,8 +1431,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -1439,6 +1438,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &789121405
@@ -1542,7 +1543,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &916689979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1555,8 +1556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -1564,6 +1563,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &916689980
@@ -1750,7 +1751,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1113078809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1763,15 +1764,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
   localCentroid: {x: NaN, y: NaN, z: NaN}
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
-  angularVelocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 30, y: 30, z: 0}
+  friction: 1
+  resistution: 1
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1113078810
@@ -1850,7 +1851,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1113078808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1875,7 +1876,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1590021037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1888,8 +1889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -1897,6 +1896,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1590021038
@@ -2013,15 +2014,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
   localCentroid: {x: NaN, y: NaN, z: NaN}
   position: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 10, y: 0, z: 0}
+  linearVelocity: {x: 5, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 1
+  resistution: 1
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1833573761
@@ -2125,7 +2126,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1863383379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2138,8 +2139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -2147,6 +2146,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1863383380
@@ -2250,7 +2251,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &1916521363
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2324,8 +2325,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75e74a28fe34b09458976c618d7f1085, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  veloConstant: 1
-  angularConstant: 1
   mass: 1
   inverseMass: 0
   globalCentroid: {x: 0, y: 0, z: 0}
@@ -2333,6 +2332,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 0.5
+  resistution: 0.5
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1916521368
