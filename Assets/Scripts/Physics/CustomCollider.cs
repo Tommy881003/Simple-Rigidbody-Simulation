@@ -26,7 +26,7 @@ public class CustomCollider : MonoBehaviour
     [HideInInspector]
     public colliderType type = colliderType.Other;
 
-    protected virtual void Calculate() 
+    public virtual void Calculate() 
     {
         mesh = GetComponent<MeshFilter>().sharedMesh;
 
@@ -55,10 +55,6 @@ public class CustomCollider : MonoBehaviour
 
     private void Start()
     {
-        Calculate();
         CollisionManager.colliders.Add(this);
-        Debug.Log(localInertiaTensor.GetRow(0));
-        Debug.Log(localInertiaTensor.GetRow(1));
-        Debug.Log(localInertiaTensor.GetRow(2));
     }
 }

@@ -73,6 +73,7 @@ public class CustomRigidbody : MonoBehaviour
         /*更新質量和質量中心*/
         foreach(CustomCollider cc in ccs)
         {
+            cc.Calculate();
             cc._rigidbody = this;
             colliders.Add(cc);
             mass += cc.mass;
@@ -91,6 +92,10 @@ public class CustomRigidbody : MonoBehaviour
             localInertiaTensor += (cc.localInertiaTensor + 
                                    cc.mass * (Vector3.Dot(distance, distance) * Matrix3x3.identity - 
                                    Matrix3x3.OuterProduct(distance, distance)));
+
+            Debug.Log(cc.localInertiaTensor.GetRow(0));
+            Debug.Log(cc.localInertiaTensor.GetRow(1));
+            Debug.Log(cc.localInertiaTensor.GetRow(2));
         }
 
         localInverseInertiaTensor = localInertiaTensor.inverse;
@@ -140,12 +145,7 @@ public class CustomRigidbody : MonoBehaviour
         transform.Rotate(angularVelocity * angularConstant * Time.fixedDeltaTime);
     }
 
-    private void Reset()
-    {
-        AddColliders();
-    }
-
-    private void Awake()
+    private void Start()
     {
         AddColliders();
     }

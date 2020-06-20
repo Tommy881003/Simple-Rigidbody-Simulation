@@ -96,9 +96,9 @@ public class CollisionManager : MonoBehaviour
                                    +contact.b._rigidbody.linearVelocity
                                    +Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, contact.localContactB);
         float closeVelocity = Vector3.Dot(relativeVelocity, contact.contactNormal);
-        float b = -(resistution / Time.fixedDeltaTime) * contact.penetrationDepth + resistution * closeVelocity;
+        float b = -(beta / Time.fixedDeltaTime) * contact.penetrationDepth + resistution * closeVelocity;
 
-        float lambda = Mathf.Max(0, effectiveMass * (-(jv + b)));
+        float lambda = effectiveMass * (-(jv + b));
 
         contact.a._rigidbody.linearVelocity += contact.a._rigidbody.inverseMass * j_va * lambda;
         contact.a._rigidbody.angularVelocity += contact.a._rigidbody.localInverseInertiaTensor.Transform(j_wa) * lambda;
@@ -106,7 +106,7 @@ public class CollisionManager : MonoBehaviour
         contact.b._rigidbody.angularVelocity += contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb) * lambda;
         /********************/
 
-        /*切向量碰撞處理1*/
+        /*切向量碰撞處理1*//*
         j_va = contact.contactTangent1;
         j_wa = Vector3.Cross(contact.localContactA, contact.contactTangent1);
         j_vb = -contact.contactTangent1;
@@ -134,7 +134,7 @@ public class CollisionManager : MonoBehaviour
         contact.b._rigidbody.angularVelocity += contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb) * lambdaT;
         /********************/
 
-        /*切向量碰撞處理2*/
+        /*切向量碰撞處理2*//*
         j_va = contact.contactTangent2;
         j_wa = Vector3.Cross(contact.localContactA, contact.contactTangent2);
         j_vb = -contact.contactTangent2;
@@ -151,7 +151,6 @@ public class CollisionManager : MonoBehaviour
                                    + Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, contact.localContactB);
         closeVelocity = Vector3.Dot(relativeVelocity, contact.contactTangent2);
         b = friction * closeVelocity;
-
         lambdaT = Mathf.Clamp(effectiveMass * (-(jv + b)), -maxFrictionForce, maxFrictionForce);
 
         contact.a._rigidbody.linearVelocity += contact.a._rigidbody.inverseMass * j_va * lambdaT;

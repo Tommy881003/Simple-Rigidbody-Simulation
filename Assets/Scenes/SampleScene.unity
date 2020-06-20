@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bType: 0
   cType: 0
-  beta: 0
+  beta: 1
 --- !u!4 &48321271
 Transform:
   m_ObjectHideFlags: 0
@@ -311,7 +311,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &274053749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -330,9 +330,9 @@ MonoBehaviour:
   localCentroid: {x: NaN, y: NaN, z: NaN}
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
-  angularVelocity: {x: 30, y: 30, z: 30}
-  friction: 0.5
-  resistution: 0.5
+  angularVelocity: {x: 0, y: 0, z: 0}
+  friction: 1
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &274053750
@@ -344,7 +344,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 274053748}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4ec7f369e3a37a744b7ef3d6d664c83b, type: 3}
+  m_Script: {fileID: 11500000, guid: f1dae0f3e10b24b45a54c2ea4a07d2ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mass: 1
@@ -408,7 +408,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 274053748}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 0.5, z: 0}
+  m_LocalPosition: {x: 5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1251,10 +1251,10 @@ MonoBehaviour:
   globalCentroid: {x: 0, y: 0, z: 0}
   localCentroid: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
-  linearVelocity: {x: 0, y: 0, z: 0}
+  linearVelocity: {x: 3, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 0.5
-  resistution: 0.5
+  friction: 1
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1833573761
@@ -1358,7 +1358,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1863383379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1377,9 +1377,9 @@ MonoBehaviour:
   localCentroid: {x: NaN, y: NaN, z: NaN}
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
-  angularVelocity: {x: 30, y: 30, z: 30}
-  friction: 0.5
-  resistution: 0.5
+  angularVelocity: {x: 180, y: 180, z: 180}
+  friction: 1
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
 --- !u!114 &1863383380

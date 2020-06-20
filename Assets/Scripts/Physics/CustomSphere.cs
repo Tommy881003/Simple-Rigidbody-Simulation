@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CustomSphere : CustomCollider
 {
-    protected override void Calculate()
+    public override void Calculate()
     {
         base.Calculate();
         type = colliderType.Sphere;
