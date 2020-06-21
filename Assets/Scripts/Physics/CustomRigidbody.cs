@@ -46,6 +46,9 @@ public class CustomRigidbody : MonoBehaviour
 
     private List<CustomCollider> colliders = new List<CustomCollider>();
 
+    public bool isStatic;
+    public bool useGravity;
+
     /*根據質心更新位置*/
     private void UpdateGlobalCentroidFromPosition()
     {
@@ -143,6 +146,8 @@ public class CustomRigidbody : MonoBehaviour
     {
         transform.position += linearVelocity * veloConstant * Time.fixedDeltaTime;
         transform.Rotate(angularVelocity * angularConstant * Time.fixedDeltaTime);
+        if (useGravity)
+            linearVelocity += CollisionManager.gravity * Time.fixedDeltaTime;
     }
 
     private void Start()

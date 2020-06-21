@@ -12,8 +12,8 @@ public class GJKwithEPA : CollisionDetection
     private static int maxGJKLoop = 64;
 
     /*For EPA only*/
-    private static float epaThreshold = 0.0001f;
-    private static int maxEPALoop = 32;
+    private static float epaThreshold = 0.000001f;
+    private static int maxEPALoop = 64;
     private static int maxEPAFaces = 64;
     private static int maxEPALooseEdges = 64;
 
