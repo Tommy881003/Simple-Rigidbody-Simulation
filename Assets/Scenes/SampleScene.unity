@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bType: 0
   cType: 0
-  beta: 0.6
+  beta: 0.4
 --- !u!4 &48321271
 Transform:
   m_ObjectHideFlags: 0
@@ -307,8 +307,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -558,8 +558,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -685,8 +685,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -812,8 +812,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -1242,8 +1242,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -1457,8 +1457,8 @@ MonoBehaviour:
   localCentroid: {x: 0, y: 0, z: 0}
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
-  angularVelocity: {x: 30, y: 0, z: 0}
-  friction: 1
+  angularVelocity: {x: 30, y: -30, z: 30}
+  friction: 0.5
   resistution: 1
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
@@ -1523,8 +1523,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -1650,8 +1650,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -1916,7 +1916,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.31730464, y: 0, z: 0, w: 0.94832367}
-  m_LocalPosition: {x: 0, y: 20, z: -30}
+  m_LocalPosition: {x: 0, y: 12, z: -18}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1961,8 +1961,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2088,8 +2088,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2215,8 +2215,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2342,8 +2342,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2570,8 +2570,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2697,8 +2697,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2824,8 +2824,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0
@@ -2951,8 +2951,8 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   linearVelocity: {x: 0, y: 0, z: 0}
   angularVelocity: {x: 0, y: 0, z: 0}
-  friction: 1
-  resistution: 1
+  friction: 0
+  resistution: 0
   forceAccumulator: {x: 0, y: 0, z: 0}
   torqueAccumulator: {x: 0, y: 0, z: 0}
   isStatic: 0

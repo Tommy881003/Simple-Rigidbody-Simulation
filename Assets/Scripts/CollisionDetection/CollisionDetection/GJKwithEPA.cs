@@ -309,9 +309,9 @@ public class GJKwithEPA : CollisionDetection
 
     private static void CalculateContactInfo(CustomCollider a, CustomCollider b, Vector3[] face)
     {
-        currentContact.globalContactA = Support(a, -searchDir);
+        currentContact.globalContactA = MeanSupport(a, -searchDir);
         currentContact.localContactA = a.gameObject.transform.worldToLocalMatrix.MultiplyPoint3x4(currentContact.globalContactA);
-        currentContact.globalContactB = Support(b, searchDir);
+        currentContact.globalContactB = MeanSupport(b, searchDir);
         currentContact.localContactB = b.gameObject.transform.worldToLocalMatrix.MultiplyPoint3x4(currentContact.globalContactB);
         currentContact.contactNormal = face[3];
         currentContact.penetrationDepth = Vector3.Dot(face[0],face[3]);
@@ -345,6 +345,38 @@ public class GJKwithEPA : CollisionDetection
                 support = globalV;
             }
         }
+        return support;
+    }
+
+    private static Vector3 MeanSupport(CustomCollider collider, Vector3 vector)
+    {
+        Vector3 support = Vector3.zero;
+        List<Vector3> supports = new List<Vector3>();
+        float dotValue = -10000000;
+        float tolerance = 0.0001f;
+
+        Matrix4x4 worldMatrix = collider.gameObject.transform.localToWorldMatrix;
+
+        Vector3[] verts = collider.mesh.vertices;
+
+        foreach (Vector3 v in verts)
+        {
+            Vector3 globalV = worldMatrix.MultiplyPoint3x4(v);
+            if (Mathf.Abs(Vector3.Dot(vector, globalV) - dotValue) <= tolerance)
+                supports.Add(globalV);
+            else if (Vector3.Dot(vector, globalV) > dotValue)
+            {
+                supports.Clear();
+                dotValue = Vector3.Dot(vector, globalV);
+                supports.Add(globalV);
+            }
+        }
+
+        foreach (Vector3 v in supports)
+            support += v;
+
+        support /= supports.Count;
+
         return support;
     }
 }

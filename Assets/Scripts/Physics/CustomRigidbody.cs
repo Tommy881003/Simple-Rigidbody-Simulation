@@ -96,9 +96,9 @@ public class CustomRigidbody : MonoBehaviour
                                    cc.mass * (Vector3.Dot(distance, distance) * Matrix3x3.identity - 
                                    Matrix3x3.OuterProduct(distance, distance)));
 
-            Debug.Log(cc.localInertiaTensor.GetRow(0));
-            Debug.Log(cc.localInertiaTensor.GetRow(1));
-            Debug.Log(cc.localInertiaTensor.GetRow(2));
+            //Debug.Log(cc.localInertiaTensor.GetRow(0));
+            //Debug.Log(cc.localInertiaTensor.GetRow(1));
+            //Debug.Log(cc.localInertiaTensor.GetRow(2));
         }
 
         localInverseInertiaTensor = localInertiaTensor.inverse;
