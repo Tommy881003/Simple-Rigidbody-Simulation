@@ -16,6 +16,8 @@ public struct CollisionContact
     public Vector3 contactTangent1;
     public Vector3 contactTangent2;
     public float penetrationDepth;
+
+    public float normalImpulseSum;
 }
 
 public abstract class CollisionDetection

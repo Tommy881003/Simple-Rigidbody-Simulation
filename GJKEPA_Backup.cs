@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -12,43 +12,13 @@ public class GJKwithEPA : CollisionDetection
     private static int maxGJKLoop = 64;
 
     /*For EPA only*/
-    private struct CSOFace
-    {
-        public readonly CSOVertex a;
-        public readonly CSOVertex b;
-        public readonly CSOVertex c;
-        public readonly Vector3 normal;
-        public readonly float distance;
-        public CSOFace(CSOVertex A, CSOVertex B, CSOVertex C)
-        {
-            a = A;
-            b = B;
-            c = C;
-            normal = Vector3.Cross(b.vertCSO - a.vertCSO, c.vertCSO - a.vertCSO).normalized;
-            distance = Vector3.Dot(a.vertCSO,normal);
-        }
-    };
-    private static float epaThreshold = 0.0001f;
+    private static float epaThreshold = 0.000001f;
     private static int maxEPALoop = 64;
     private static int maxEPAFaces = 64;
     private static int maxEPALooseEdges = 64;
 
     /*For both GJK and EPA algorithm*/
-    private struct CSOVertex
-    {
-        public readonly Vector3 vertA;
-        public readonly Vector3 vertB;
-        public readonly Vector3 vertCSO;
-        public CSOVertex(Vector3 a, Vector3 b)
-        {
-            vertA = a;
-            vertB = b;
-            vertCSO = vertA + vertB;
-        }
-    };
-
-    private static CSOVertex first,second,third,last;
-
+    private static Vector3 first, second, third, last;
     private static Vector3 searchDir;
 
     private static CollisionContact currentContact;
@@ -90,30 +60,30 @@ public class GJKwithEPA : CollisionDetection
     {
         /*Find the first point of the simplex*/
         searchDir = colliderA.transform.position - colliderB.transform.position;
-        third = new CSOVertex(-Support(colliderA, -searchDir),Support(colliderB, searchDir));
+        third = Support(colliderB, searchDir) - Support(colliderA, -searchDir);
 
         /*Find the second point of the simplex*/
-        searchDir = -third.vertCSO;
-        second = new CSOVertex(-Support(colliderA, -searchDir),Support(colliderB, searchDir));
+        searchDir = -third;
+        second = Support(colliderB, searchDir) - Support(colliderA, -searchDir);
 
         /*If the new simplex point have negative dot value, then the CSO must NOT contain the origin*/
-        if (Vector3.Dot(second.vertCSO, searchDir) < 0) 
+        if (Vector3.Dot(second, searchDir) < 0) 
             return false;
 
-        searchDir = Vector3.Cross(Vector3.Cross(third.vertCSO - second.vertCSO, -second.vertCSO), third.vertCSO - second.vertCSO);
+        searchDir = Vector3.Cross(Vector3.Cross(third - second, -second), third - second);
         if (searchDir == Vector3.zero)
         {
-            searchDir = Vector3.Cross(third.vertCSO - second.vertCSO, Vector3.right); //normal with x-axis
+            searchDir = Vector3.Cross(third - second, Vector3.right); //normal with x-axis
             if (searchDir == Vector3.zero)
-                searchDir = Vector3.Cross(third.vertCSO - second.vertCSO, Vector3.forward); //normal with z-axis
+                searchDir = Vector3.Cross(third - second, Vector3.forward); //normal with z-axis
         }
         simplexCount = 2;
 
         /*run through the iteration.*/
         for(int i = 0; i < maxGJKLoop; i++)
         {
-            first = new CSOVertex(-Support(colliderA, -searchDir),Support(colliderB, searchDir));
-            if (Vector3.Dot(first.vertCSO, searchDir) < 0)
+            first = Support(colliderB, searchDir) - Support(colliderA, -searchDir);
+            if (Vector3.Dot(first, searchDir) < 0)
                 return false;
             simplexCount++;
             if (simplexCount == 3)
@@ -127,9 +97,9 @@ public class GJKwithEPA : CollisionDetection
 
     private static void UpdateTriangle()
     {
-        Vector3 sVect = second.vertCSO - first.vertCSO;
-        Vector3 tVect = third.vertCSO - first.vertCSO;
-        Vector3 nFirst = -first.vertCSO;
+        Vector3 sVect = second - first;
+        Vector3 tVect = third - first;
+        Vector3 nFirst = -first;
         Vector3 normal = Vector3.Cross(sVect, tVect);
 
         /*Try reducing the simplex such that it contains the closest point with the lowest dimension.*/
@@ -173,10 +143,10 @@ public class GJKwithEPA : CollisionDetection
     private static bool TetrahedralContainOrigin()
     {
         /*First is the top of the tetrahedral.*/
-        Vector3 sVect = second.vertCSO - first.vertCSO;
-        Vector3 tVect = third.vertCSO - first.vertCSO;
-        Vector3 lVect = last.vertCSO - first.vertCSO;
-        Vector3 nFirst = -first.vertCSO;
+        Vector3 sVect = second - first;
+        Vector3 tVect = third - first;
+        Vector3 lVect = last - first;
+        Vector3 nFirst = -first;
         Vector3 FST = Vector3.Cross(sVect, tVect);
         Vector3 FTL = Vector3.Cross(tVect, lVect);
         Vector3 FLS = Vector3.Cross(lVect, sVect);
@@ -211,23 +181,36 @@ public class GJKwithEPA : CollisionDetection
 
     private static void EPA(CustomCollider colliderA, CustomCollider colliderB)
     {
-        CSOFace[] faces = new CSOFace[maxEPAFaces];
+        Vector3[,] faces = new Vector3[maxEPAFaces, 4];
+        Vector3 a = first; Vector3 b = second; Vector3 c = third; Vector3 d = last;
 
-        faces[0] = new CSOFace(first,second,third);
-        faces[1] = new CSOFace(first,third,last);
-        faces[2] = new CSOFace(first,last,second);
-        faces[3] = new CSOFace(second,last,third);
+        faces[0,0] = a;
+        faces[0,1] = b;
+        faces[0,2] = c;
+        faces[0,3] = Vector3.Cross(b - a, c - a).normalized;
+        faces[1,0] = a;
+        faces[1,1] = c;
+        faces[1,2] = d;
+        faces[1,3] = Vector3.Cross(c - a, d - a).normalized;
+        faces[2,0] = a;
+        faces[2,1] = d;
+        faces[2,2] = b;
+        faces[2,3] = Vector3.Cross(d - a, b - a).normalized;
+        faces[3,0] = b;
+        faces[3,1] = d;
+        faces[3,2] = c;
+        faces[3,3] = Vector3.Cross(d - b, c - b).normalized;
 
         int numFaces = 4;
         int closestFace = 0;
 
         for (int iterations = 0; iterations < maxEPALoop; iterations++)
         {
-            float min_dist = faces[0].distance;
+            float min_dist = Vector3.Dot(faces[0, 0], faces[0, 3]);
             closestFace = 0;
             for (int i = 1; i < numFaces; i++)
             {
-                float dist = faces[i].distance;
+                float dist = Vector3.Dot(faces[i, 0], faces[i, 3]);
                 if (dist < min_dist)
                 {
                     min_dist = dist;
@@ -235,45 +218,36 @@ public class GJKwithEPA : CollisionDetection
                 }
             }
 
-            searchDir = faces[closestFace].normal;
-            CSOVertex newVert =  new CSOVertex(-Support(colliderA, -searchDir), Support(colliderB,searchDir));
+            searchDir = faces[closestFace,3];
+            Vector3 newVert = Support(colliderB,searchDir) - Support(colliderA, -searchDir);
 
-            if (Vector3.Dot(newVert.vertCSO, searchDir) - min_dist < epaThreshold)
+            if (Vector3.Dot(newVert, searchDir) - min_dist < epaThreshold)
             {
-                CalculateContactInfo(colliderA, colliderB, faces[closestFace]);
+                Vector3[] face = new Vector3[4];
+                face[0] = faces[closestFace, 0];
+                face[1] = faces[closestFace, 1];
+                face[2] = faces[closestFace, 2];
+                face[3] = faces[closestFace, 3];
+                CalculateContactInfo(colliderA, colliderB, face);
                 return;
             }
 
-            CSOVertex[,] looseEdges = new CSOVertex[maxEPALooseEdges,2];
+            Vector3[,] looseEdges = new Vector3[maxEPALooseEdges,2];
             int looseEdgeNum = 0;
 
             for(int i = 0; i < numFaces; i++)
             {
-                if (Vector3.Dot(faces[i].normal, newVert.vertCSO - faces[i].a.vertCSO) > 0)
+                if (Vector3.Dot(faces[i,3], newVert - faces[i,0]) > 0)
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        CSOVertex[] currentEdge = new CSOVertex[2];
-                        if(j == 0)
-                        {
-                            currentEdge[0] = faces[i].a;
-                            currentEdge[1] = faces[i].b;
-                        }
-                        else if(j == 1)
-                        {
-                            currentEdge[0] = faces[i].b;
-                            currentEdge[1] = faces[i].c;
-                        }
-                        else
-                        {
-                            currentEdge[0] = faces[i].c;
-                            currentEdge[1] = faces[i].a;
-                        }
-                        
+                        Vector3[] currentEdge = new Vector3[2];
+                        currentEdge[0] = faces[i, j];
+                        currentEdge[1] = faces[i, (j + 1) % 3];
                         bool foundEdge = false;
                         for (int k = 0; k < looseEdgeNum; k++)
                         {
-                            if (looseEdges[k,1].vertCSO == currentEdge[0].vertCSO && looseEdges[k,0].vertCSO == currentEdge[1].vertCSO)
+                            if (looseEdges[k,1] == currentEdge[0] && looseEdges[k,0] == currentEdge[1])
                             {
                                 looseEdges[k,0] = looseEdges[looseEdgeNum - 1,0];
                                 looseEdges[k,1] = looseEdges[looseEdgeNum - 1,1];
@@ -292,7 +266,10 @@ public class GJKwithEPA : CollisionDetection
                         }
                     }
 
-                    faces[i] = faces[numFaces - 1];
+                    faces[i,0] = faces[numFaces - 1,0];
+                    faces[i,1] = faces[numFaces - 1,1];
+                    faces[i,2] = faces[numFaces - 1,2];
+                    faces[i,3] = faces[numFaces - 1,3];
                     numFaces--;
                     i--;
                 }
@@ -301,49 +278,43 @@ public class GJKwithEPA : CollisionDetection
             for (int i = 0; i < looseEdgeNum; i++)
             {
                 if (numFaces >= maxEPAFaces) break;
-                faces[numFaces] = new CSOFace(looseEdges[i,0],looseEdges[i,1],newVert);
+                faces[numFaces,0] = looseEdges[i,0];
+                faces[numFaces,1] = looseEdges[i,1];
+                faces[numFaces,2] = newVert;
+                faces[numFaces,3] = Vector3.Cross(looseEdges[i,0] - looseEdges[i,1], looseEdges[i,0] - newVert).normalized;
 
-                float bias = 0.0001f;
-                if (faces[numFaces].distance + bias < 0) //Check the counter-clockwiseness of the vertices
-                    faces[numFaces] = new CSOFace(looseEdges[i,1],looseEdges[i,0],newVert);
+                float bias = 0.000001f;
+                if (Vector3.Dot(faces[numFaces,0], faces[numFaces,3]) + bias < 0)
+                {
+                    Vector3 temp = faces[numFaces,0];
+                    faces[numFaces,0] = faces[numFaces,1];
+                    faces[numFaces,1] = temp;
+                    faces[numFaces,3] = -faces[numFaces,3];
+                }
                 numFaces++;
             }
 
             if(iterations == maxEPALoop - 1)
             {
-                CalculateContactInfo(colliderA, colliderB, faces[closestFace]);
+                Vector3[] _face = new Vector3[4];
+                _face[0] = faces[closestFace, 0];
+                _face[1] = faces[closestFace, 1];
+                _face[2] = faces[closestFace, 2];
+                _face[3] = faces[closestFace, 3];
+                CalculateContactInfo(colliderA, colliderB, _face);
                 return;
             }
         }
     }
 
-    private static void CalculateContactInfo(CustomCollider a, CustomCollider b, CSOFace face)
+    private static void CalculateContactInfo(CustomCollider a, CustomCollider b, Vector3[] face)
     {
-        currentContact.contactNormal = face.normal;
-        currentContact.penetrationDepth = face.distance;
-
-        Vector3 closestPoint = face.normal * face.distance;
-
-        /*  Calculate the barycentric coordinate of the closest point. We're using the Cramer's rule to solve coordinates.  */
-        /*  The method of calulating coordinates is based on this website :
-            https://gamedev.stackexchange.com/questions/23743/whats-the-most-efficient-way-to-find-barycentric-coordinates
-         */
-        Vector3 v0 = face.b.vertCSO - face.a.vertCSO, v1 = face.c.vertCSO - face.a.vertCSO, v2 = closestPoint - face.a.vertCSO;
-        float d00 = Vector3.Dot(v0, v0);
-        float d01 = Vector3.Dot(v0, v1);
-        float d11 = Vector3.Dot(v1, v1);
-        float d20 = Vector3.Dot(v2, v0);
-        float d21 = Vector3.Dot(v2, v1);
-        float denom = d00 * d11 - d01 * d01;
-        float v = (d11 * d20 - d01 * d21) / denom;
-        float w = (d00 * d21 - d01 * d20) / denom;
-        float u = 1.0f - v - w;
-
-        currentContact.globalContactA = u * -face.a.vertA + v * -face.b.vertA + w * -face.c.vertA;
+        currentContact.globalContactA = MeanSupport(a, -searchDir);
         currentContact.localContactA = a.gameObject.transform.worldToLocalMatrix.MultiplyPoint3x4(currentContact.globalContactA);
-        currentContact.globalContactB = u * face.a.vertB + v * face.b.vertB + w * face.c.vertB;
+        currentContact.globalContactB = MeanSupport(b, searchDir);
         currentContact.localContactB = b.gameObject.transform.worldToLocalMatrix.MultiplyPoint3x4(currentContact.globalContactB);
-        
+        currentContact.contactNormal = face[3];
+        currentContact.penetrationDepth = Vector3.Dot(face[0],face[3]);
 
         /*  The method of calulating orthonormal basis is based on this website :
             http://allenchou.net/2013/12/game-physics-contact-generation-epa/
@@ -374,6 +345,38 @@ public class GJKwithEPA : CollisionDetection
                 support = globalV;
             }
         }
+        return support;
+    }
+
+    private static Vector3 MeanSupport(CustomCollider collider, Vector3 vector)
+    {
+        Vector3 support = Vector3.zero;
+        List<Vector3> supports = new List<Vector3>();
+        float dotValue = -10000000;
+        float tolerance = 0.0001f;
+
+        Matrix4x4 worldMatrix = collider.gameObject.transform.localToWorldMatrix;
+
+        Vector3[] verts = collider.mesh.vertices;
+
+        foreach (Vector3 v in verts)
+        {
+            Vector3 globalV = worldMatrix.MultiplyPoint3x4(v);
+            if (Mathf.Abs(Vector3.Dot(vector, globalV) - dotValue) <= tolerance)
+                supports.Add(globalV);
+            else if (Vector3.Dot(vector, globalV) > dotValue)
+            {
+                supports.Clear();
+                dotValue = Vector3.Dot(vector, globalV);
+                supports.Add(globalV);
+            }
+        }
+
+        foreach (Vector3 v in supports)
+            support += v;
+
+        support /= supports.Count;
+
         return support;
     }
 }

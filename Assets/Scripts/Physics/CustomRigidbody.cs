@@ -35,7 +35,7 @@ public class CustomRigidbody : MonoBehaviour
     public Vector3 angularVelocity;
 
     [Range(0f, 1f)]
-    public float friction = 0.5f;
+    public float friction = 1f;
     [Range(0f, 1f)]
     public float resistution = 0.5f;
 

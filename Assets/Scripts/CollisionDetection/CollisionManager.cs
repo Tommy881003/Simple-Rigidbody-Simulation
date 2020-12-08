@@ -29,6 +29,8 @@ public class CollisionManager : MonoBehaviour
     public collisionDetectionType cType;
     [Range(0f, 1f)]
     public float beta = 1;
+    [Range(1,20)]
+    public int resolveInteration = 10;
 
     private void Awake()
     {
@@ -73,40 +75,78 @@ public class CollisionManager : MonoBehaviour
 
     private void SolveContact(CollisionContact contact)
     {
-        /*法向量碰撞處理*/
-        /*碰撞限制初始化*/
+        //contact.a.gameObject.transform.position += contact.contactNormal * contact.penetrationDepth * 0.5f;
+        //contact.b.gameObject.transform.position -= contact.contactNormal * contact.penetrationDepth * 0.5f;
+
+        Debug.DrawLine(contact.a.gameObject.transform.position - Vector3.down * 0.1f,contact.a.gameObject.transform.position + Vector3.down * 0.1f,Color.yellow);
+        Debug.DrawLine(contact.a.gameObject.transform.position - Vector3.left * 0.1f,contact.a.gameObject.transform.position + Vector3.left * 0.1f,Color.yellow);
+        Debug.DrawLine(contact.a.gameObject.transform.position - Vector3.back * 0.1f,contact.a.gameObject.transform.position + Vector3.back * 0.1f,Color.yellow);
+        
+        Debug.DrawLine(contact.globalContactA - Vector3.down * 0.2f,contact.globalContactA + Vector3.down * 0.2f,Color.yellow);
+        Debug.DrawLine(contact.globalContactA - Vector3.left * 0.2f,contact.globalContactA + Vector3.left * 0.2f,Color.yellow);
+        Debug.DrawLine(contact.globalContactA - Vector3.back * 0.2f,contact.globalContactA + Vector3.back * 0.2f,Color.yellow);
+
+        Debug.DrawLine(contact.b.gameObject.transform.position - Vector3.down * 0.1f,contact.b.gameObject.transform.position + Vector3.down * 0.1f,Color.cyan);
+        Debug.DrawLine(contact.b.gameObject.transform.position - Vector3.left * 0.1f,contact.b.gameObject.transform.position + Vector3.left * 0.1f,Color.cyan);
+        Debug.DrawLine(contact.b.gameObject.transform.position - Vector3.back * 0.1f,contact.b.gameObject.transform.position + Vector3.back * 0.1f,Color.cyan);
+        
+        Debug.DrawLine(contact.globalContactB - Vector3.down * 0.2f,contact.globalContactB + Vector3.down * 0.2f,Color.cyan);
+        Debug.DrawLine(contact.globalContactB - Vector3.left * 0.2f,contact.globalContactB + Vector3.left * 0.2f,Color.cyan);
+        Debug.DrawLine(contact.globalContactB - Vector3.back * 0.2f,contact.globalContactB + Vector3.back * 0.2f,Color.cyan);
+        
+        //法向量碰撞處理
+        //碰撞限制初始化
+
         Vector3 rA = contact.globalContactA - contact.a.gameObject.transform.position;
         Vector3 rB = contact.globalContactB - contact.b.gameObject.transform.position;
+
+        /*  J = [j_va, j_wa, j_vb, j_wb]
+         *    = [normal, rA × normal, -normal, - (rb × normal)]
+         *
+         *      ┌ Ma 0  0  0  ┐
+         *  M = │ 0  Ia 0  0  │ Ma, Mb are mass. Ia, Ib are inertia tensor.
+         *      │ 0  0  Mb 0  │
+         *      └ 0  0  0  Ib ┘
+         *
+         *  Effective mass = 1 / (J × M^(-1) × J^(T))
+         */
 
         Vector3 j_va = contact.contactNormal;
         Vector3 j_wa = Vector3.Cross(rA, contact.contactNormal);
         Vector3 j_vb = -contact.contactNormal;
         Vector3 j_wb = -Vector3.Cross(rB, contact.contactNormal);
 
-        float k = contact.a._rigidbody.inverseMass +
+        float k = (contact.a._rigidbody.inverseMass * Vector3.Dot(j_va,j_va)) +
                   Vector3.Dot(j_wa, contact.a._rigidbody.localInverseInertiaTensor.Transform(j_wa)) +
-                  contact.b._rigidbody.inverseMass +
+                  (contact.b._rigidbody.inverseMass * Vector3.Dot(j_vb,j_vb)) +
                   Vector3.Dot(j_wb, contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb));
 
         float effectiveMass = 1.0f / k;
 
-        /*碰撞限制解析*/
-        float jv = Vector3.Dot(j_va, contact.a._rigidbody.linearVelocity) +
-                   Vector3.Dot(j_wa, contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad) +
-                   Vector3.Dot(j_vb, contact.b._rigidbody.linearVelocity) +
-                   Vector3.Dot(j_wb, contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad);
+        float totalImpulse = 0;
 
-        float resistution = (contact.a._rigidbody.resistution + contact.b._rigidbody.resistution) * 0.5f;
-        Vector3 relativeVelocity = -contact.a._rigidbody.linearVelocity
-                                   +Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
-                                   +contact.b._rigidbody.linearVelocity
-                                   -Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
+        //碰撞限制解析
+
+        float jv =  Vector3.Dot(j_va, contact.a._rigidbody.linearVelocity) +
+                    Vector3.Dot(j_wa, contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad) +
+                    Vector3.Dot(j_vb, contact.b._rigidbody.linearVelocity) +
+                    Vector3.Dot(j_wb, contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad);
+
+        /*float resistution = (contact.a._rigidbody.resistution + contact.b._rigidbody.resistution) * 0.5f;
+        Vector3 relativeVelocity =  -contact.a._rigidbody.linearVelocity
+                                    -Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
+                                    +contact.b._rigidbody.linearVelocity
+                                    +Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
         float closeVelocity = Vector3.Dot(relativeVelocity, contact.contactNormal);
         
-        float b = -(beta / Time.fixedDeltaTime) * contact.penetrationDepth + resistution * closeVelocity;
+        float b = -(beta / Time.fixedDeltaTime) * contact.penetrationDepth + resistution * closeVelocity;*/
 
-        float lambda = Mathf.Max(0,effectiveMass * (-(jv + b)));
-        //.Log(effectiveMass * (-(jv + b)));
+        float tempLambda = effectiveMass * (-(jv /*+ b*/));
+        float oldTotalImpulse = totalImpulse;
+
+        totalImpulse = Mathf.Clamp(totalImpulse + tempLambda, 0, float.PositiveInfinity);
+
+        float lambda = totalImpulse - oldTotalImpulse;
 
         if(!contact.a._rigidbody.isStatic)
         {
@@ -118,9 +158,10 @@ public class CollisionManager : MonoBehaviour
             contact.b._rigidbody.linearVelocity += contact.b._rigidbody.inverseMass * j_vb * lambda;
             contact.b._rigidbody.angularVelocity += contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb) * lambda;
         }
-        /********************/
 
-        /*切向量碰撞處理1*/
+        //========================
+        /*
+        //切向量碰撞處理1
         j_va = contact.contactTangent1;
         j_wa = Vector3.Cross(rA, contact.contactTangent1);
         j_vb = -contact.contactTangent1;
@@ -131,12 +172,12 @@ public class CollisionManager : MonoBehaviour
              Vector3.Dot(j_vb, contact.b._rigidbody.linearVelocity) +
              Vector3.Dot(j_wb, contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad);
 
-        float friction = (contact.a._rigidbody.friction + contact.b._rigidbody.friction) * 0.5f;
+        float friction = 1 - ((contact.a._rigidbody.friction + contact.b._rigidbody.friction) * 0.5f);
         float maxFrictionForce = friction * lambda;
         relativeVelocity = -contact.a._rigidbody.linearVelocity
-                                   + Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
+                                   - Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
                                    + contact.b._rigidbody.linearVelocity
-                                   - Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
+                                   + Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
         closeVelocity = Vector3.Dot(relativeVelocity, contact.contactTangent1);
         b = friction * closeVelocity;
 
@@ -152,9 +193,9 @@ public class CollisionManager : MonoBehaviour
             contact.b._rigidbody.linearVelocity += contact.b._rigidbody.inverseMass * j_vb * lambdaT;
             contact.b._rigidbody.angularVelocity += contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb) * lambdaT;
         }   
-        /********************/
+        //========================
 
-        /*切向量碰撞處理2*/
+        //切向量碰撞處理2
         j_va = contact.contactTangent2;
         j_wa = Vector3.Cross(rA, contact.contactTangent2);
         j_vb = -contact.contactTangent2;
@@ -166,9 +207,9 @@ public class CollisionManager : MonoBehaviour
              Vector3.Dot(j_wb, contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad);
 
         relativeVelocity = -contact.a._rigidbody.linearVelocity
-                                   + Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
+                                   - Vector3.Cross(contact.a._rigidbody.angularVelocity * Mathf.Deg2Rad, rA)
                                    + contact.b._rigidbody.linearVelocity
-                                   - Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
+                                   + Vector3.Cross(contact.b._rigidbody.angularVelocity * Mathf.Deg2Rad, rB);
         closeVelocity = Vector3.Dot(relativeVelocity, contact.contactTangent2);
         b = friction * closeVelocity;
         lambdaT = Mathf.Clamp(effectiveMass * (-(jv + b)), -maxFrictionForce, maxFrictionForce);
@@ -183,6 +224,7 @@ public class CollisionManager : MonoBehaviour
             contact.b._rigidbody.linearVelocity += contact.b._rigidbody.inverseMass * j_vb * lambdaT;
             contact.b._rigidbody.angularVelocity += contact.b._rigidbody.localInverseInertiaTensor.Transform(j_wb) * lambdaT;
         }
-        /********************/
+        //========================
+        */
     }
 }
